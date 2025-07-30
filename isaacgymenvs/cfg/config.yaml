@@ -1,0 +1,232 @@
+
+# Task name - used to pick the class to load
+task_name: ${task.name}
+# experiment name. defaults to name of training config
+experiment: ''
+
+# if set to positive integer, overrides the default number of environments
+num_envs: ''
+episode_length: ''
+
+# seed - set to -1 to choose random seed
+seed: 42
+# set to True for deterministic performance
+torch_deterministic: False
+
+# set the maximum number of learning iterations to train for. overrides default per-environment setting
+max_iterations: ''
+
+## Device config
+#  'physx' or 'flex'
+physics_engine: 'physx'
+# whether to use cpu or gpu pipeline
+pipeline: 'gpu'
+# device for running physics simulation
+sim_device: 'cuda:0'
+# device to run RL
+rl_device: 'cuda:0'
+graphics_device_id: 0
+
+## PhysX arguments
+num_threads: 4 # Number of worker threads per scene used by PhysX - for CPU PhysX only.
+solver_type: 1 # 0: pgs, 1: tgs
+num_subscenes: 4 # Splits the simulation into N physics scenes and runs each one in a separate thread
+
+# RLGames Arguments
+# test - if set, run policy in inference mode (requires setting checkpoint to load)
+test: False
+# used to set checkpoint path
+checkpoint: ''
+# set sigma when restoring network
+sigma: ''
+# set to True to use multi-gpu training
+multi_gpu: False
+
+wandb_activate: False
+wandb_group: ''
+wandb_name: ${train.params.config.name}
+wandb_entity: 'jinseokbae'
+wandb_project: 'HybridLatentMotionPrior'
+wandb_tags: []
+wandb_logcode_dir: '' 
+
+capture_video: False
+capture_video_freq: 1464
+capture_video_len: 100
+force_render: True
+capture_default_pose: False
+
+# disables rendering
+headless: False
+
+# set default task and default training config based on task
+defaults:
+  - task: Ant
+  - train: ${task}PPO
+  - hydra/job_logging: disabled
+  - pbt: no_pbt
+
+# set the directory where the output files get saved
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# effort limit
+set_effort_limit: ''
+# goal related
+positional_encoding: "time"
+# datset
+motion_dataset: ''
+
+# keyframe related
+num_keyframes: ''
+keyframe_temporal_style: "" 
+keyframe_spatial_style: "full" # ["full", "masked"]
+keyframe_spatial_mask_ratio: 0.5
+add_keyframe_interval_noise: ''
+episodic_reward_rescale: ''
+
+# reference motion visualization
+display_reference: "" # None, keyframes, motion
+
+# kinematic motion play
+kinematic: False
+
+# start first frame
+start_frame: ""
+
+# imitation reward, reset style
+next_obs_steps: ""
+imitation_rew_style: ""
+imitation_reset_style: ""
+
+# energy reward
+energy_rew_coef: ''
+
+# cvae - encoder
+# common
+latent_dim: ''
+vae_kl_loss_coef: ''
+vae_kl_schedule: ''
+vae_commit_loss_coef: ''
+vae_commit_schedule: ''
+expert_loss_coef: ''
+vae_recon_loss_coef: ''
+no_goal: False # ablation - to test zero goal input
+# for continuous enc
+continuous_enc_style: ""
+
+# for discrete enc
+enc_type: ""
+quant_type: ""
+num_quants: ""
+code_num: ""
+fsq_levels: "" # fsq only
+
+# early termination
+enable_et: ''
+
+# technique
+prioritized_sampling: ''
+
+# training value net
+value_net_type: ''
+trans_dropout: ''
+shuffle_ratio: '' # for value training
+shuffle_mode: '' 
+value_input_type: ''
+local_value_obs: ''
+lipschitz_coef: ''
+dirichlet_coef: ''
+mlp_pe: ''
+mlp_time_all: ''
+
+# pretraining
+expert: ''
+latent_expert: ''
+use_amp: '' # whether using amp reward for training high level policy
+bc_phase_ratio: ''
+update_bc_every: ''
+pretrained: ''
+pretrained_enc: ''
+pretrained_dec: ''
+pretrained_mlp: ''
+pretrained_kinematic: ''
+distill_exploration: ''
+
+# actor only optimization
+actor_optim: ''
+actor_learning_rate: ''
+critic_early_learning: ''
+
+# test-time optimization
+optim_verbose: ''
+optimizer_type: ''
+optim_init_mode: ''
+test_original: False
+test_unoptim: False
+
+# for short and dynamic motion
+truncate_time: ''
+
+# tranfer learning
+transfer_seed: '' # path for the checkpoint of transfer_seed
+transfer_part: '' # part to fine-tune in order to part-wise models
+transfer_prior_mode: '' # prior net fine-tuning mode
+motion_group: '' # only used for env
+
+# etc
+low_memory_load: ''
+noise_scale: ''
+
+# multi discrete policy
+gumbel_temperature: ''
+gumbel_stochastic: ''
+expert_mse_ratio: ''
+
+# exploration
+decoder_noise: ''
+
+# track
+num_track_points: ''
+tilted: ''
+
+# (dglim) for visualization
+target_episodes: [0, 1, 2, 3, 4, 5] # seed 42
+output_dir: ""
+
+# eval
+motion_matching: ''
+prior_rollout: ''
+eval_jitter: ''
+num_inference_quants: ''
+eval_metric: '' # tracking
+
+# latent regularize loss
+latent_regularize: ''
+latent_reg_loss_coef: ''
+
+# navigation
+target_location: ''
+heading_speed: ''
+
+# visualization
+camera_follow: ''
+white_mode: ''
+
+# sep
+dof_group: ''
+body_separation_viz: ''
+
+# data extraction
+data_extraction: ''
+
+# hybridplus only
+post_cond_prior: ''
+
+# entroy coef
+entropy_coef: ''
+
+# point-goal navigation
+random_effort_cut: ''

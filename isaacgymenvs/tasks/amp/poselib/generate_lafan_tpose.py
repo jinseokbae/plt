@@ -1,0 +1,82 @@
+# Copyright (c) 2018-2023, NVIDIA Corporation
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its
+#    contributors may be used to endorse or promote products derived from
+#    this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import numpy as np
+import torch
+from poselib.core.rotation3d import *
+from poselib.skeleton.skeleton3d import SkeletonState, SkeletonTree
+from poselib.visualization.common import plot_skeleton_state
+
+"""
+This scripts imports a MJCF XML file and converts the skeleton into a SkeletonTree format.
+It then generates a zero rotation pose, and adjusts the pose into a T-Pose.
+"""
+
+# import MJCF file
+tree_file = "data/LAFAN/lafan1_modified_npz/train/walk1_subject1.npz"
+tree_dict = np.load(tree_file, allow_pickle=True)["arr_0"].item()
+node_names = tree_dict["node_names"]
+parent_indices = torch.from_numpy(tree_dict["parent_indices"])
+local_translation = torch.from_numpy(tree_dict["joint_offsets"])
+
+skeleton = SkeletonTree(node_names, parent_indices, local_translation)
+
+# generate zero rotation pose
+zero_pose = SkeletonState.zero_pose(skeleton)
+
+# adjust pose into a T Pose
+local_rotation = zero_pose.local_rotation
+local_rotation[skeleton.index("Hips")] = quat_mul(
+    quat_from_angle_axis(angle=torch.tensor([90.0]), axis=torch.tensor([1.0, 0.0, 0.0]), degree=True),
+    local_rotation[skeleton.index("Hips")],
+)
+local_rotation[skeleton.index("Hips")] = quat_mul(
+    quat_from_angle_axis(angle=torch.tensor([90.0]), axis=torch.tensor([0.0, 0.0, 1.0]), degree=True),
+    local_rotation[skeleton.index("Hips")],
+)
+
+local_rotation[skeleton.index("LeftArm")] = quat_mul(
+    quat_from_angle_axis(angle=torch.tensor([90.0]), axis=torch.tensor([0.0, 0.0, 1.0]), degree=True),
+    local_rotation[skeleton.index("LeftArm")],
+)
+local_rotation[skeleton.index("RightArm")] = quat_mul(
+    quat_from_angle_axis(angle=torch.tensor([90.0]), axis=torch.tensor([0.0, 0.0, -1.0]), degree=True),
+    local_rotation[skeleton.index("RightArm")],
+)
+# this doesn't matter
+translation = zero_pose.root_translation
+"""
+# RUN THIS FIRST!
+root_offset = abs(zero_pose.global_translation[..., 2].min().item())
+print(root_offset) # 0.9563524127006531
+"""
+# translation += torch.tensor([0, 0, 0.9563524127006531])
+
+# save and visualize T-pose
+zero_pose.to_file("data/lafan_tpose.npy")
+plot_skeleton_state(zero_pose)

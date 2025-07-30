@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PLT (SIGGRAPH 2025)</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+    <link
+      href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600&family=Roboto+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link href='https://fonts.googleapis.com/css?family=Architects Daughter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet'>
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Mono&display=swap" rel="stylesheet">
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./js/bulma_toggle.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/5fd1dd8417.js" crossorigin="anonymous"></script>
+
+    <!-- Academicons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png"/>
+    <link rel="icon" sizes="32x32" href="./assets/favicon-32x32.png"/>
+    <link rel="icon" sizes="16x16" href="./assets/favicon-16x16.png"/>
+
+    <!-- MathJax -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+
+  <body>
+
+    <!-- title / authors / icons -->
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-widescreen has-text-centered">
+          <!-- title -->
+          <h1 class="title is-size-1 is-size-2-mobile publication-title">
+            PLT: Part-Wise Latent Tokens as Adaptable Motion Priors for Physically Simulated Characters
+          </h1>
+          <div class="is-size-4-tablet publication-institute">
+            <span class="author-block">SIGGRAPH 2025<br/></span>
+          </div>
+
+          <!-- authors -->
+          <div class="container is-max-desktop has-text-centered author-list">
+            <div class="columns is-mobile is-centered is-gapless">
+              <div class="column is-2-tablet is-size-5-tablet publication-authors">
+                <a class="author-blocks" href="https://jinseokbae.github.io">Jinseok Bae</a>
+              </div>
+              <div class="column is-2-tablet is-size-5-tablet publication-authors">
+                <a class="author-blocks" href="https://3d.snu.ac.kr/members">Younghwan Lee</a>
+              </div>
+              <div class="column is-2-tablet is-size-5-tablet publication-authors">
+                <a class="author-blocks" href="https://3d.snu.ac.kr/members">Donggeun Lim</a>
+              </div>
+              <div class="column is-2-tablet is-size-5-tablet publication-authors">
+                <a class="author-blocks" href="http://3d.snu.ac.kr/members">Young Min Kim</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="is-size-5-tablet publication-institute">
+            <span class="author-block">Seoul National University</span>
+          </div>
+          
+          <div class="logo-list">
+            <a class="lab-logo" href="https://3d.snu.ac.kr">
+              <img src="./assets/3dv.png">
+            </a>
+          </div>
+
+          <!-- icons -->
+          <div class="is-size-5 link-blocks">
+            <a class="button link-button is-rounded" href="https://dl.acm.org/doi/10.1145/3721238.3730637">
+              <span class="icon">
+                <i class="fa-solid fa-file"></i>
+              </span>
+              <span>Paper</span>
+            </a>
+            <a class="button link-button is-rounded" href="https://www.youtube.com/watch?v=gEsvxBneuZE">
+              <span class="icon">
+                <i class="fa-brands fa-youtube"></i>
+              </span>
+              <span>Video</span>
+            </a>
+            <a class="button link-button is-rounded" href="https://github.com/jinseokbae/plt">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Code</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- teasor -->
+    <section class="hero">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <img src="./assets/teaser.png" width="100%" style="display: block; margin: auto" />
+          <h2 class="tldr">
+            <i>Our novel method with <b>part-wise</b> approach allows physically simulated characters to gradually update part-wise motion priors from the multiple datasets, namely part-wise adaptation.</i>
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="column is-full-width is-centered has-text-centered">
+          <h2 class="subtitle is-size-3 has-text-weight-medium publication-keywords">
+            Abstract
+          </h2>
+          <div class="content has-text-justified">
+            <p>
+              Physically simulated characters can learn highly natural full-body motion guided by motion capture datasets. However, the range of motion is limited to the existing high-quality datasets, and cannot effectively adapt to challenging scenarios. We propose a novel policy architecture that learns part-wise motion skills, where individual parts can be separately extended and combined for unobserved settings. Our method employs a set of part-specific codebooks, which robustly capture motion dynamics without catastrophic collapse or forgetting. This structured decomposition allows intuitive control over the character’s behavior and dynamic exploration for a novel combination of part-wise motion. We further incorporate a refinement network compensating for subtle discrepancies in the disjoint discrete tokens, thus improving motion quality and stability. Our extensive evaluations show that our part-wise latent token achieves superior performance in imitating motions, even those from unseen distribution. We also validate our method in challenging tasks, including body tracking, navigation on complex terrains, and point-goal navigation with damaged body parts. Finally, we introduce a part-wise expansion of motion priors, where the physically simulated character incrementally adapts partial motion and produces unique combinations of whole-body motion, significantly diversifying motions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="column is-full-width is-centered has-text-centered">
+          <h2 class="subtitle is-size-3 has-text-weight-medium publication-keywords">
+            Method
+          </h2>
+          <img src="./assets/pipeline.png" width="100%" style="display: block; margin: auto" />
+        </div>
+          <p class="normal-text has-text-justified">
+            <b><i>Policy architecture of the part-wise latent token (PLT) model.</i></b>
+            (<b>a</b>) During the imitation-learning phase, we first spatially split the output of the encoder. Then, we employ multiple codebooks to extract latent token <span>\(z_k\)</span> for each body part. A refinement network calculates continuous offset <span>\(\Delta z\)</span> and splits it into <span>\(\{\Delta z_k\}_K\)</span>. Each part-wise refinement <span>\(\Delta z_k\)</span> is applied to each latent token <span>\(z_k\)</span>, and the corresponding part-wise low-level policy <span>\(\pi_{\text{low}, k}\)</span> computes actions <span>\(a_k\)</span> subsequently.
+            (<b>b</b>) In the task-learning phase, a high-level policy <span>\(\pi_{\text{high}}\)</span> selects indices for latent tokens from the pretrained codebooks.
+            (<b>c</b>) Our policy design allows part-wise adaptation by updating only the minimal set of parameters associated with the queried body part.
+          </p>
+      </div>
+      </section>
+
+    
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="column is full-width is-centered has-text-centered">
+          <h2 class="subtitle is-size-3 has-text-weight-medium publication-keywords">
+            Video
+          </h2>
+        </div>
+        <div class="publication-video">
+          <iframe
+            src="https://www.youtube.com/embed/gEsvxBneuZE"
+            allow="autoplay; encrypted-media"
+            allowfullscreen="true"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- BibTex sectoion -->
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="column is-full-width is-centered has-text-centered">
+          <h2 class="subtitle is-size-3 has-text-weight-medium publication-keywords">BibTeX</h2>
+        </div>
+        <div class="box bibtex-box">
+          <pre>
+            @inproceedings{bae2025plt,
+              title={PLT: Part-Wise Latent Tokens as Adaptable Motion Priors for Physically Simulated Characters},
+              author={Bae, Jinseok and Lee, Younghwan and Lim, Donggeun and Kim, Young Min},
+              booktitle={Proceedings of the Special Interest Group on Computer Graphics and Interactive Techniques Conference Conference Papers},
+              pages={1--10},
+              year={2025}
+            }
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer section -->
+    <footer class="footer" style="padding-top: 1rem">
+      <!-- navigation -->
+      <a role="button" class="navbar-burger" data-target="moreResearch" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+      <div class="navbar-menu" id="moreResearch">
+        <div class="navbar-start" style="flex-grow: 1; justify-content: center">
+          <div class="block is-flex" style="margin-bottom: 0px">
+            <a class="navbar-item" href="https://jinseokbae.github.io">
+              <span class="icon">
+                <i class="fas fa-home"></i>
+              </span>
+            </a>
+            <a class="navbar-item" href="https://github.com/jinseokbae">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- license -->
+      <div class="content has-text-centered" style="margin-top: 1.6rem">
+        <p>
+          This website is licensed under a
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"
+            >Creative Commons Attribution-ShareAlike 4.0 International License</a
+          >
+        </p>
+      </div>
+    </footer>
+  </body>
+
+</html>

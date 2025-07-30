@@ -1,0 +1,86 @@
+params:
+  seed: ${...seed}
+
+  algo:
+    name: latent_discrete_agent
+
+  model:
+    name: common_discrete_model
+
+  network:
+    name: common
+    separate: True
+
+    space:
+      discrete:
+
+    mlp:
+      units: [1024, 1024, 512]
+      activation: relu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+  load_checkpoint: ${if:${...checkpoint},True,False} # flag which sets whether to load the checkpoint
+  load_path: ${...checkpoint} # path to the checkpoint to load
+  load_pretrained: ${if:${...pretrained},True,False} # flag which sets whether to load the checkpoint
+  load_pretrained_path: ${...pretrained} # path to the checkpoint to load
+  use_latent_expert: ${resolve_default:False,${...latent_expert}}
+  use_amp: ${resolve_default:False,${...use_amp}}
+
+  config:
+    name: ${resolve_default:HumanoidAMP,${....experiment}}
+    full_experiment_name: ${.name}
+    env_name: rlgpu
+    ppo: True
+    multi_gpu: ${....multi_gpu}
+    mixed_precision: False
+    normalize_input: True
+    normalize_value: True
+    value_bootstrap: True
+    num_actors: ${....task.env.numEnvs}
+    reward_shaper:
+      scale_value: 1
+    normalize_advantage: True
+    gamma: 0.99
+    tau: 0.95
+    learning_rate: 5e-5
+    lr_schedule: constant
+    kl_threshold: 0.008
+    score_to_win: 20000
+    max_epochs: ${resolve_default:2500,${....max_iterations}}
+    save_best_after: 100
+    save_frequency: 2500
+    print_stats: True
+    grad_norm: 1.0 
+    entropy_coef: 0.01
+    truncate_grads: True # False
+    e_clip: 0.2
+    horizon_length: 16
+    minibatch_size: 32768
+    mini_epochs: 6
+    critic_coef: 5
+    clip_value: False
+    seq_length: 4
+    bounds_loss_coef: 10
+
+    # prioritized sampling
+    prioritized_sampling: ${resolve_default:False,${....prioritized_sampling}}
+
+    # actor optim
+    actor_learning_rate: ${resolve_default:2e-4,${....actor_learning_rate}}
+    
+    # amp setting
+    disc_reward_scale: 2
+    task_reward_w: 0.5
+    disc_reward_w: 0.5
+
+    # gumbel
+    gumbel_temperature: ${resolve_default:1.0,${....gumbel_temperature}}
+    expert_mse_ratio: ${resolve_default:0.9,${....expert_mse_ratio}}
+
+    # for test only
+    eval_jitter: ${resolve_default:False, ${....eval_jitter}}

@@ -1,0 +1,136 @@
+params:
+  seed: ${...seed}
+
+  algo:
+    name: cvae_agent
+
+  model:
+    name: cvae_model
+
+  network:
+    name: cvae
+    separate: True
+
+    space:
+      continuous:
+        mu_activation: None
+        sigma_activation: None
+        mu_init:
+          name: default
+        sigma_init:
+          name: const_initializer
+          val: -2.9
+        fixed_sigma: True
+        learn_sigma: False
+
+    enc: # decoder
+      units: [2048, 1536, 1024, 1024, 512, 512] # big model referenced by PULSE
+      activation: swish
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+    dec: # encoder
+      units: [2048, 1536, 1024, 1024, 512, 512] # big model referenced by PULSE
+      activation: relu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+    
+    value: # value net
+      units: [2048, 1536, 1024, 1024, 512, 512] # big model referenced by PULSE
+      activation: relu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+  load_checkpoint: ${if:${...checkpoint},True,False} # flag which sets whether to load the checkpoint
+  load_path: ${...checkpoint} # path to the checkpoint to load
+  load_expert: ${if:${...expert},True,False} # flag which sets whether to load the checkpoint
+  load_expert_path: ${...expert} # path to the checkpoint to load
+
+  config:
+    name: ${resolve_default:HumanoidImitate,${....experiment}}
+    full_experiment_name: ${.name}
+    env_name: rlgpu
+    ppo: True
+    multi_gpu: ${....multi_gpu}
+    mixed_precision: False
+    normalize_input: True
+    normalize_value: True
+    value_bootstrap: True
+    num_actors: ${....task.env.numEnvs}
+    reward_shaper:
+      scale_value: 1
+    normalize_advantage: True
+    gamma: 0.95
+    tau: 0.95
+    learning_rate: 5e-5
+    lr_schedule: constant
+    kl_threshold: 0.008
+    score_to_win: 20000
+    max_epochs: ${resolve_default:200000,${....max_iterations}}
+    save_best_after: 100
+    save_frequency: 2500
+    print_stats: True
+    grad_norm: 1.0
+    entropy_coef: 0.0
+    truncate_grads: False
+    e_clip: 0.1 # 0.2
+    horizon_length: 16
+    minibatch_size: 65536
+    mini_epochs: 6
+    critic_coef: 5
+    clip_value: False
+    seq_length: 4
+    bounds_loss_coef: 10
+
+    # goal obs related
+    normalize_goal_input: True
+    # prioritized sampling
+    prioritized_sampling: ${resolve_default:False,${....prioritized_sampling}}
+    # cvae related
+    latent_dim: ${resolve_default:64,${....latent_dim}}
+    enc_type: "discrete"
+    quant_type: ${resolve_default:"rvq",${....quant_type}}
+    num_quants: ${resolve_default:8,${....num_quants}}
+    code_num: ${resolve_default:1024,${....code_num}}
+    vae_commit_loss_coef: ${resolve_default:1.0,${....vae_commit_loss_coef}}
+    expert_loss_coef: ${resolve_default:10.0,${....expert_loss_coef}}
+    
+    # learning rate for online distillation
+    actor_learning_rate: ${resolve_default:1e-4,${....actor_learning_rate}}
+    distill_exploration: ${resolve_default:False,${....distill_exploration}}
+
+    # latent regularize
+    latent_regularize: ${resolve_default:True,${....latent_regularize}}
+    latent_reg_loss_coef: ${resolve_default:0.05,${....latent_reg_loss_coef}}
+    
+    # AMP
+    amp_obs_demo_buffer_size: 200000
+    amp_replay_buffer_size: 1000000
+    amp_replay_keep_prob: 0.01
+    amp_batch_size: 1024
+    amp_minibatch_size: 8192
+    disc_coef: 5
+    disc_logit_reg: 0.05
+    disc_grad_penalty: 5
+    disc_reward_scale: 2
+    disc_weight_decay: 0.0001
+    normalize_amp_input: True
+
+    task_reward_w: 0.9
+    disc_reward_w: 0.1
+
+    # for test only
+    eval_jitter: ${resolve_default:False, ${....eval_jitter}}
+    num_inference_quants: ${resolve_default:0, ${....num_inference_quants}}
