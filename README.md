@@ -162,7 +162,6 @@ python train.py headless=True wandb_activate=True task=Imitation train=LafanImit
 # Number of Tracker = 1 (Attached to Head)
 python train.py headless=True wandb_activate=True task=Tracking motion_dataset=LaFAN1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation num_track_points=1 experiment=plt5_lafan_track1
 
-
 # Number of Tracker = 3 (Attached to Head/Right Hand/Right Foot)
 python train.py headless=True wandb_activate=True task=Tracking motion_dataset=LaFAN1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation num_track_points=3 experiment=plt5_lafan_track3
 
@@ -185,6 +184,6 @@ This repository contains three types of code:
 
 1. Code originally authored by NVIDIA (Isaac Gym), licensed under the [BSD 3-Clause License](third_party/LICENSE.txt).
 
-2. PyTorch implementaion on the various vector quantization methods `vector_quantize_pytorch`(https://github.com/lucidrains/vector-quantize-pytorch), licensed under the [MIT License](https://github.com/lucidrains/vector-quantize-pytorch?tab=MIT-1-ov-file).
+2. PyTorch implementaion on the various vector quantization methods [`vector_quantize_pytorch`](https://github.com/lucidrains/vector-quantize-pytorch), licensed under the [MIT License](https://github.com/lucidrains/vector-quantize-pytorch?tab=MIT-1-ov-file).
 
 3. Code authored by ourselves, licensed under the [MIT License](LICENSE).
