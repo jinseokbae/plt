@@ -1,5 +1,11 @@
-# PLT (SIGGRAPH 2025)
-This is an official implementation for SIGGRAPH 2025 paper titled "PLT: Part-Wise Latent Tokens as Adaptable Motion Priors for Physically Simulated Characters".
+# PLT: Part-Wise Latent Tokens (SIGGRAPH 2025)
+<div style="text-align:center">
+<img src="docs/assets/teaser.png" alt="teaser"/>
+<br/>
+<em>Our novel method with part-wise approach allows physically simulated characters to gradually update part-wise motion priors from the multiple datasets, namely part-wise adaptation..</em>
+</div>
+<br/>
+This is an official implementation for SIGGRAPH 2025 paper titled *"PLT: Part-Wise Latent Tokens as Adaptable Motion Priors for Physically Simulated Characters"*.
 We provide codes for all the training and testing environments demonstrated in the main paper.
 This code repo is largely based on our pervious project [`hybrid_latent_prior`](https://github.com/jinseokbae/hybrid_latent_prior).
 - Paper : [link](https://dl.acm.org/doi/10.1145/3721238.3730637)
