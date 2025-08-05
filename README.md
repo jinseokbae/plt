@@ -61,6 +61,7 @@ Please note that these commands are using sample reference motions listed in `as
 <em>Visualization of motion imitation. White (left) and blue (right) agents show reference motions and simulated motions, respecitvely.</em>
 </div>
 <br/>
+
 To train our PLT imitation policy, we employ online distillation suggested by [PULSE](https://arxiv.org/abs/2310.04582).
 We empirically found that this strategy allows stable training of complex student policies that are usually employing additional loss terms for regularizing latent space.
 
