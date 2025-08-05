@@ -142,7 +142,7 @@ This code assumes retargeted LaFAN1 dataset is located under `assets/motions`.
 > `--code_num` > number of codes in a codebook <br>
 > `--num_quants` > number of codebooks (only applicable when `--quant_type=rvq`.)<br>
 
-This training command that you have donwnloaded pretrained expert policy under `isaacgymenvs/pretrained/`.
+This training command assumes that you have donwnloaded pretrained expert policy under `isaacgymenvs/pretrained/`.
 
 ```shell
 python train.py headless=True wandb_activate=True task=Imitation train=LafanImitation/LafanPLTDistill expert=pretrained/expert_lafan_imitation experiment=plt5_lafan_imitation dof_group=trunk-limbs quant_type=rvq code_num=1024 num_quants=8
