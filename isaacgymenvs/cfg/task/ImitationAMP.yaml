@@ -22,6 +22,10 @@ env:
   cameraFollow: ${resolve_default:True, ${...camera_follow}} # if the camera follows humanoid or not
   enableDebugVis: False
 
+  # visualization
+  body_separation_viz: ${resolve_default:"total",${...body_separation_viz}}
+
+
   # evals
   kinematic: ${resolve_default:False, ${...kinematic}}
   motion_matching: ${resolve_default:False, ${...motion_matching}}

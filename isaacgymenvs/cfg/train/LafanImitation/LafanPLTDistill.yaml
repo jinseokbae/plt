@@ -107,11 +107,20 @@ params:
     prioritized_sampling: ${resolve_default:True,${....prioritized_sampling}}
     # cvae related
     latent_dim: ${resolve_default:64,${....latent_dim}}
-    enc_type: "discrete"
-    quant_type: ${resolve_default:"simple",${....quant_type}}
-    num_quants: ${resolve_default:1,${....num_quants}}
-    code_num: ${resolve_default:8192,${....code_num}}
+    enc_scale: 0.3
+    continuous_enc_style: ${resolve_default:"quantdirect",${....continuous_enc_style}}
+    enc_type: "hybrid"
+    post_sampling_rate: 0.6
+
+    # quantizer
+    quant_type: ${resolve_default:"rvq",${....quant_type}}
+    num_quants: ${resolve_default:8,${....num_quants}}
+    code_num: ${resolve_default:1024,${....code_num}}
     vae_commit_loss_coef: ${resolve_default:1.0,${....vae_commit_loss_coef}}
+
+    # cvae related
+    vae_kl_loss_coef: ${resolve_default:0.1,${....vae_kl_loss_coef}}
+    vae_kl_schedule: ${resolve_default:True,${....vae_kl_schedule}}
     expert_loss_coef: ${resolve_default:10.0,${....expert_loss_coef}}
 
     # sep related
@@ -128,3 +137,6 @@ params:
     # for test only
     eval_jitter: ${resolve_default:False, ${....eval_jitter}}
     num_inference_quants: ${resolve_default:0, ${....num_inference_quants}}
+
+    # posterior latent conditioned prior
+    post_cond_prior: ${resolve_default:True, ${....post_cond_prior}}

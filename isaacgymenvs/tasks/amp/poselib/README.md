@@ -2,6 +2,8 @@
 
 ## 1. Download BVH files
 - Please download bvh files from the original LaFAN1 [code repo](https://github.com/ubisoft/ubisoft-laforge-animation-dataset).
+> ⚠️ **For Better Quality.**<br>
+> We also recommend to use [revised version of LaFAN1](https://github.com/orangeduck/lafan1-resolved).
 - Then place bvh files under `lafan1/data`.
 
 ## 2. Convert BVH files to NPZ format
