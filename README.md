@@ -125,7 +125,60 @@ python train.py test=True num_envs=1 task=PointGoalNavigation random_effort_cut=
 ```
 
 ## Train
-TODO
+To train from scratch, please refer to the following commands.
+This code assumes retargeted LaFAN1 dataset is located under `assets/motions`.
+> ⚠️ **General Configs.**<br>
+> `--headless` > please make sure running training with headless mode.<br>
+> `--wandb_activate` > we strongly recommend to use [WanDB](https://wandb.ai/site/) for monitoring training.<br>
+> `--experiment` > this will be used as experiment name.<br>
+
+
+### 🏃‍➡️ Part 1: Imitation Policies
+
+> ⚠️ **Imitation-Learning Configs.**<br>
+> `--expert` > please designate directory where expert policy is located. <br>
+> `--dof_group` > body-partitioning strategies. select among `['upper-lower', 'right-left']` for PLT-2, or `['trunk-limbs', 'random5']` for PLT-5.<br>
+> `--quant_type` > VQ method. options are `basic` (standard VQ) or `rvq` (RVQ). <br>
+> `--code_num` > number of codes in a codebook <br>
+> `--num_quants` > number of codebooks (only applicable when `--quant_type=rvq`.)<br>
+
+This training command that you have donwnloaded pretrained expert policy under `isaacgymenvs/pretrained/`.
+
+```shell
+python train.py headless=True wandb_activate=True task=Imitation train=LafanImitation/LafanPLTDistill expert=pretrained/expert_lafan_imitation experiment=plt5_lafan_imitation dof_group=trunk-limbs quant_type=rvq code_num=1024 num_quants=8
+```
+
+
+### 📝 Part 2: Task Policies
+
+> ⚠️ **Task-Learning Configs.**<br>
+> `--entroy_coef` > adjust exploration rate during the training of high-level policy.<br>
+> `--num_quants` > as we're using RVQ, set number of codebooks employed from the pretrained VQ structure. 1 is recommended. <br>
+> `--num_track_points` > in n-body tracking, set number of trackers (1, 3, 5 are only allowed values).<br>
+> `--random_effort_cut` > in point-goal navigation, set `True` to run with damaged setting.<br>
+
+**(a) N-body Tracking**
+```shell
+# Number of Tracker = 1 (Attached to Head)
+python train.py headless=True wandb_activate=True task=Tracking motion_dataset=LaFAN1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation num_track_points=1 experiment=plt5_lafan_track1
+
+
+# Number of Tracker = 3 (Attached to Head/Right Hand/Right Foot)
+python train.py headless=True wandb_activate=True task=Tracking motion_dataset=LaFAN1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation num_track_points=3 experiment=plt5_lafan_track3
+
+# Number of Tracker = 5 (Attached to Head/Hands/Feet)
+python train.py headless=True wandb_activate=True task=Tracking motion_dataset=LaFAN1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation num_track_points=5 experiment=plt5_lafan_track5
+```
+
+**(b) Point-Goal Navigation**
+```shell
+# Plain Navigation
+python train.py headless=True wandb_activate=True task=PointGoalNavigation train=LafanTasks/LafanNavLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation experiment=plt5_plain_nav max_iterations=5000
+
+# Damaged Navigation
+python train.py headless=True wandb_activate=True task=PointGoalNavigation train=LafanTasks/LafanNavLatentMultiDiscretePPO entropy_coef=0.001 random_effort_cut=True pretrained=pretrained/plt5_lafan_imitation experiment=plt5_plain_nav max_iterations=10000
+```
+
 
 ## License
 This repository contains three types of code:
