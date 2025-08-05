@@ -58,7 +58,7 @@ class ModelcVAEGroupContinuous(ModelcVAEContinuous):
             obs = self.norm_obs(obs)
             a_out_group = self.a2c_network.decoder(obs, z)
 
-            mu = torch.zeros(obs.shape[0], self.actions_num, device=obs.device)
+            mu = torch.zeros(obs.shape[0], self.a2c_network.actions_num, device=obs.device)
             for idx, a_out in enumerate(a_out_group):
                 _mu = self.a2c_network.mu_act(self.a2c_network.mu[idx](a_out))
                 target_dof_ids = self.a2c_network.dof_group[idx]

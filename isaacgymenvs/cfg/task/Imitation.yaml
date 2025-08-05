@@ -1,37 +1,43 @@
 # used to create the object
-name: HumanoidNavigation
+name: HumanoidImitate
 
 physics_engine: ${..physics_engine}
 
 # if given, will override the device setting in gym.
 env: 
   test: ${resolve_default:False, ${...test}}
-  kinematic: ${resolve_default:False, ${...kinematic}}
+  low_memory_load: ${resolve_default:False, ${...low_memory_load}}
+  target_episodes: ${resolve_default:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],${...target_episodes}} # visualization
+  noise_scale: ${resolve_default:0.0, ${...noise_scale}}
   displayReference: ${resolve_default:True, ${...display_reference}}
   eval_jitter: ${resolve_default:False, ${...eval_jitter}}
-  numEnvs: ${resolve_default:4096,${...num_envs}}
-  seed: ${resolve_default:42,${...seed}}
-  envSpacing: 5
-  episodeLength: ${resolve_default:240,${...episode_length}}
-  cameraFollow: True # if the camera follows humanoid or not
-  enableDebugVis: False
-  target_location: ${resolve_default:True, ${...target_location}}
-  target_episodes: ${resolve_default:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],${...target_episodes}} # visualization
-  heading_speed: ${resolve_default:1.5, ${...heading_speed}}
+  eval_metric: ${resolve_default:False, ${...eval_metric}}
+  data_extraction: ${resolve_default:False, ${...data_extraction}}
+  load_path: ${...checkpoint} # path to the checkpoint to load
   white_mode: ${resolve_default:False, ${...white_mode}}
-  random_effort_cut: ${resolve_default:False, ${...random_effort_cut}}
+  numEnvs: ${resolve_default:8192,${...num_envs}}
+  seed: ${resolve_default:42,${...seed}}
+  envSpacing: 5 # (prior_viz)
+  episodeLength: ${resolve_default:150,${...episode_length}}
+  cameraFollow: ${resolve_default:True, ${...camera_follow}} # if the camera follows humanoid or not
+  enableDebugVis: False
 
   # visualization
   body_separation_viz: ${resolve_default:"total",${...body_separation_viz}}
-  capture_default_pose: ${resolve_default:False,${...capture_default_pose}}
+
+  # evals
+  kinematic: ${resolve_default:False, ${...kinematic}}
+  start_frame: ${resolve_default:-1, ${...start_frame}}
+  motion_matching: ${resolve_default:False, ${...motion_matching}}
+  prior_rollout: ${resolve_default:False, ${...prior_rollout}}
   
   pdControl: True
   setEffortLimit : ${resolve_default:False,${...set_effort_limit}} 
   powerScale: 1.0
-  controlFrequencyInv: 2 # 30 Hz
+  controlFrequencyInv: 4 # 30 Hz
   stateInit: "Random"
   hybridInitProb: 0.5
-  numAMPObsSteps: 2
+  numNextObsSteps: ${resolve_default:1, ${...next_obs_steps}}
 
   localRootObs: True
   contactBodies: ["right_foot", "left_foot"]
@@ -44,7 +50,7 @@ env:
   # motion file shoud be either single numpy file or list of numpy files or directory
   # case 1 > motion_file : "samples/amp_humanoid_walk.npy"
   # case 2 > motion_file : ["samples/amp_humanoid_walk.npy", "samples/amp_humanoid_dance.npy"]
-  motion_file: ${resolve_default:"LaFAN1/train/walk1_subject1.npy",${...motion_dataset}}
+  motion_file: ${resolve_default:"LaFAN1",${...motion_dataset}}
   energyRewCoef: ${resolve_default:0,${...energy_rew_coef}}
 
 
@@ -57,10 +63,10 @@ env:
     restitution: 0.0
   
   imitationRewStyle: ${resolve_default:"deepmimic_mul", ${...imitation_rew_style}}
-  imitationResetStyle: ${resolve_default:"reward", ${...imitation_reset_style}}
+  imitationResetStyle: ${resolve_default:"error_max", ${...imitation_reset_style}}
 
 sim:
-  dt: 0.0166 # 1/60 s
+  dt: 0.0083 # 1/120 s
   substeps: 2
   up_axis: "z"
   use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
@@ -150,4 +156,6 @@ task:
             distribution: "gaussian"
             schedule: "linear"  # "linear" will scale the current random sample by `min(current num steps, schedule_steps) / schedule_steps`
             schedule_steps: 3000
+
+
 

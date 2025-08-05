@@ -36,9 +36,9 @@ We strongly recommend you to retarget original LaFAN1 motions using codes under 
 
 If you have any problem, please reach us via e-mail.
 
-## 📚 Pretrained Models
+## 📚 Run with Pretrained Models
 We share the pretrained weights for the policies.
-Please download from this [Google Drive link](https://drive.google.com/drive/folders/10kn_lUJIYkQijNj2nWryB9gRsMUmfF3e?usp=drive_link) and unzip the folder under `isaacgymenvs/`.
+Please download from this [Google Drive link](https://drive.google.com/file/d/1LL7ryKVfo1cOdsLXA6uSQvxNk_NClS_t/view?usp=drive_link) and unzip the folder under `isaacgymenvs/`.
 We assume all the pretrained polices are located under `isaacgymenvs/pretrained/`.
 To run and visualize the result, please run the following commands under `isaacgmynevs/`.
 ```shell
@@ -47,6 +47,12 @@ cd isaacgymenvs/
 Please note that these commands are using sample reference motions listed in `assets/motions/samples/` for test (unseen motions during the training).
 
 ### 🏃‍➡️ Part 1: Imitation Policies
+<div style="text-align:center">
+<img src="docs/images/imitation.png" alt="imitation"/>
+<br/>
+<em>Visualization of motion imitation. White (left) and blue (right) agents show reference motions and simulated motions, respecitvely.</em>
+</div>
+<br/>
 To train our PLT imitation policy, we employ online distillation suggested by [PULSE](https://arxiv.org/abs/2310.04582).
 We empirically found that this strategy allows stable training of complex student policies that are usually employing additional loss terms for regularizing latent space.
 
@@ -54,19 +60,63 @@ We empirically found that this strategy allows stable training of complex studen
 
 We provide a simple expert policy trained through [Proximal Policy Optimization](https://arxiv.org/abs/1707.06347) (PPO) and [Adversarial Motion Prior](https://dl.acm.org/doi/10.1145/3450626.3459670).
 ```shell
-python train.py test=True num_envs=1 task=Imitation train=LafanImitation/LafanExpertAMPPPO motion_dataset=samples checkpoint=pretrained/expert_lafan_imitation/expert_lafan_imitation_50000.pth
+python train.py test=True num_envs=1 task=Imitation train=LafanImitation/LafanExpertAMPPPO motion_dataset=samples checkpoint=pretrained/expert_lafan_imitation/nn/expert_lafan_imitation_50000.pth
 ```
 
 **(b) PLT Imitation Policy**
 
-We share a PLT-5 model, where agent has 5 body parts (trunk, left/right arms, left/right legs).
+We share a *PLT-5 model*, where agent has 5 body parts (trunk, left/right arms, left/right legs).
 ```shell
-python train.py test=True num_envs=1 task=Imitation train=LafanImitation/LafanPLTDistill motion_dataset=samples checkpoint=pretrained/plt5_lafan_imitation/plt5_lafan_imitation_25000.pth
+python train.py test=True num_envs=1 task=Imitation train=LafanImitation/LafanPLTDistill motion_dataset=samples checkpoint=pretrained/plt5_lafan_imitation/nn/plt5_lafan_imitation_25000.pth
 ```
 
 ### 📝 Part 2: Task Policies
 
-## Run
+**(a) N-body Tracking**
+
+This task is to follow sparse targets, similar to VR tracking scenario.
+We share pretrained high-level policies that can track 1, 3 or 5 trackers respectively.
+<div style="text-align:center">
+<img src="docs/images/tracking.png" alt="tracking"/>
+<br/>
+<em>Visualization of motion tracking. Trackers are indicated with red spheres.</em>
+</div>
+<br/>
+
+```shell
+# Number of Tracker = 1 (Attached to Head)
+python train.py test=True num_envs=1 task=Tracking num_track_points=1 train=LafanTasks/LafanTrackLatentMultiDiscretePPO motion_dataset=samples pretrained=pretrained/plt5_lafan_imitation checkpoint=pretrained/plt5_lafan_track1/nn/plt5_lafan_track1_25000.pth
+
+# Number of Tracker = 3 (Attached to Head/Right Hand/Right Foot)
+python train.py test=True num_envs=1 task=Tracking num_track_points=3 train=LafanTasks/LafanTrackLatentMultiDiscretePPO motion_dataset=samples pretrained=pretrained/plt5_lafan_imitation checkpoint=pretrained/plt5_lafan_track3/nn/plt5_lafan_track3_25000.pth
+
+# Number of Tracker = 5 (Attached to Head/Hands/Feet)
+python train.py test=True num_envs=1 task=Tracking num_track_points=5 train=LafanTasks/LafanTrackLatentMultiDiscretePPO motion_dataset=samples pretrained=pretrained/plt5_lafan_imitation checkpoint=pretrained/plt5_lafan_track5/nn/plt5_lafan_track5_25000.pth
+```
+
+**(b) Point-Goal Navigation**
+
+This task is to reach position goal on the ground.
+We provide two variants:
+- *plain navigation* > standard point-goal navigation scenario.
+- *damaged navigation* > randomly weaken arbitrary actuators of the body, and then run *plain navigation*.
+
+<div style="text-align:center">
+<img src="docs/images/navigation.png" alt="navigation"/>
+<br/>
+<em>Visualization of point-goal navigation with damaged body setting. Position goal is indicated with the red disk on the ground, while damaged body part is indicated with red color.</em>
+</div>
+<br/>
+
+```shell
+# Plain Navigation
+python train.py test=True num_envs=1 task=PointGoalNavigation motion_dataset=samples/amp_humanoid_walk.npy train=LafanTasks/LafanNavLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation checkpoint=pretrained/plt5_plain_nav/nn/plt5_plain_nav_5000.pth
+
+# Damaged Navigation
+python train.py test=True num_envs=1 task=PointGoalNavigation random_effort_cut=True motion_dataset=samples/amp_humanoid_walk.npy train=LafanTasks/LafanNavLatentMultiDiscretePPO pretrained=pretrained/plt5_lafan_imitation checkpoint=pretrained/plt5_damaged_nav/nn/plt5_damaged_nav_10000.pth
+```
+
+## Train
 TODO
 
 ## License
