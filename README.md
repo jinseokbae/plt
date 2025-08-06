@@ -2,7 +2,7 @@
 <div style="text-align:center">
 <img src="docs/assets/teaser.png" alt="teaser"/>
 <br/>
-<em>Our novel method with part-wise approach allows physically simulated characters to gradually update part-wise motion priors from the multiple datasets, namely part-wise adaptation..</em>
+<em>Our novel method with part-wise approach allows physically simulated characters to gradually update part-wise motion priors from the multiple datasets, namely part-wise adaptation.</em>
 </div>
 <br/>
 
