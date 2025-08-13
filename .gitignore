@@ -33,7 +33,8 @@ outputs/
 *.hydra*
 /isaacgymenvs/wandb
 /isaacgymenvs/tasks/amp/poselib/data/*
-/assets/motions/*
+/assets/motions/.cache
+/assets/motions/LaFAN1
 /isaacgymenvs/archived/*
 /isaacgymenvs/latent_analysis/*
 
