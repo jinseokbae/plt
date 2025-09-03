@@ -69,7 +69,7 @@ We empirically found that this strategy allows stable training of complex studen
 
 We provide a simple expert policy trained through [Proximal Policy Optimization](https://arxiv.org/abs/1707.06347) (PPO) and [Adversarial Motion Prior](https://dl.acm.org/doi/10.1145/3450626.3459670).
 ```shell
-python train.py test=True num_envs=1 task=Imitation train=LafanImitation/LafanExpertAMPPPO motion_dataset=samples checkpoint=pretrained/expert_lafan_imitation/nn/expert_lafan_imitation_50000.pth
+python train.py test=True num_envs=1 task=ImitationAMP train=LafanImitation/LafanExpertAMPPPO motion_dataset=samples checkpoint=pretrained/expert_lafan_imitation/nn/expert_lafan_imitation_50000.pth
 ```
 
 **(b) PLT Imitation Policy**
